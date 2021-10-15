@@ -28,8 +28,8 @@ def testApi():
       print("worker: Loading for analysis")
       y, sr = librosa.load(fileName, sr=None)
       # onset_env = librosa.onset.onset_strength(y, sr=sr)
-      print("worker: Determining BPM")
-      # tempo = librosa.beat.tempo(onset_envelope=onset_env, sr=sr)
+      # print("worker: Determining BPM")
+      # out["bpm"] = librosa.beat.tempo(onset_envelope=onset_env, sr=sr)[0]
 
       print("worker: Creating waveform")
       fig, ax = plt.subplots(nrows=1, figsize=(16,9), sharex=True, sharey=True)
@@ -43,19 +43,14 @@ def testApi():
       print("worker: Saving waveform")
       fig.savefig(os.path.join(os.getcwd(), fileName) + "_waveform.png")
 
-      print("worker: Opening Image")
-      imageName = repr(os.path.join(os.getcwd(), fileName) + "_waveform.png")[1:-1]
-      image = Image.open(imageName)
-      w, h = image.size
-      print("worker: Cropping image")
-      imageCopy = image.crop((202, 111, 300, 111))
-      print("worker: Saving cropped image")
-      imageCopy.save(imageName.replace(".png", "_cropped.png"))
-
-      # out["bpm"] = tempo[0]
+      # print("worker: Removing files")
+      # os.remove(os.path.join(os.getcwd(), fileName) + "_waveform.png")
+      # os.remove(os.path.join(os.getcwd(), fileName))
 
       print("worker: Finishing")
       return out
+    else: 
+      raise Exception("_ code is incorrect in request.")
   except Exception as e:
       print(e)
       return {"msg": "error"}
